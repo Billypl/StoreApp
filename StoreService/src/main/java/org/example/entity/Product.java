@@ -1,8 +1,9 @@
 package org.example.entity;
 
+import jakarta.persistence.*;
 import lombok.*;
 
-import java.io.Serializable;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -11,16 +12,29 @@ import java.io.Serializable;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode
-public class Product implements Serializable {
+@Entity
+@Table(name = "products")
+public class Product {
+    @Id
+    @ToString.Exclude
+    @Builder.Default
+    @Column(name = "product_id")
+    private UUID id = UUID.randomUUID();
+
+    @Column(name = "name")
     private String name;
 
+    @Column(name = "price")
     private int price;
 
+    @Column(name = "stock")
     private int stock;
 
+    @ManyToOne
+    @JoinColumn(name = "category_id")
     private Category category;
 
-    public static ProductBuilder builder() {
+    public static ProductBuilder autoBuilder() {
         return new AutoProductBuilder();
     }
 
